@@ -53,9 +53,50 @@ public class TSecreUrgeItem implements Serializable {
     @ApiModelProperty(value = "事由与所对载体的记要")
     private String content;
 
-    /** 条目情形 0搁着 1已派出 2派不成 */
+    /** 所挂机关代号（同机关并段用） */
+    @TableField("org_no")
+    @ApiModelProperty(value = "所挂机关代号")
+    private String orgNo;
+
+    /** 片号（门牌片区，同机关同片号并一段） */
+    @TableField("area_no")
+    @ApiModelProperty(value = "片号（门牌片区）")
+    private String areaNo;
+
+    /** 承办岗代号（季度额度按岗计） */
+    @TableField("post_no")
+    @ApiModelProperty(value = "承办岗代号")
+    private String postNo;
+
+    /** 联系一栏（空着好几季没人补的天生走不动） */
+    @TableField("contact")
+    @ApiModelProperty(value = "联系一栏")
+    private String contact;
+
+    /** 所对载体件码（已从册面并走的天生走不动） */
+    @TableField("carrier_no")
+    @ApiModelProperty(value = "所对载体件码")
+    private String carrierNo;
+
+    /** 交办那一刻接手的那个岗 */
+    @TableField("assign_post")
+    @ApiModelProperty(value = "交办那一刻接手的那个岗")
+    private String assignPost;
+
+    /** 交办那一刻 */
+    @TableField("assign_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ApiModelProperty(value = "交办那一刻")
+    private Date assignAt;
+
+    /** 交办不走的缘故（堵在哪一环／哪一栏，日后照此捞出重排） */
+    @TableField("block_reason")
+    @ApiModelProperty(value = "交办不走的缘故")
+    private String blockReason;
+
+    /** 条目情形 0未启动 1已交办 2交办不走 */
     @TableField("status")
-    @ApiModelProperty(value = "条目情形 0搁着 1已派出 2派不成")
+    @ApiModelProperty(value = "条目情形 0未启动 1已交办 2交办不走")
     private Integer status;
 
     /** 删除标记 0正常 1删除 */
@@ -128,6 +169,70 @@ public class TSecreUrgeItem implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getOrgNo() {
+        return orgNo;
+    }
+
+    public void setOrgNo(String orgNo) {
+        this.orgNo = orgNo;
+    }
+
+    public String getAreaNo() {
+        return areaNo;
+    }
+
+    public void setAreaNo(String areaNo) {
+        this.areaNo = areaNo;
+    }
+
+    public String getPostNo() {
+        return postNo;
+    }
+
+    public void setPostNo(String postNo) {
+        this.postNo = postNo;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getCarrierNo() {
+        return carrierNo;
+    }
+
+    public void setCarrierNo(String carrierNo) {
+        this.carrierNo = carrierNo;
+    }
+
+    public String getAssignPost() {
+        return assignPost;
+    }
+
+    public void setAssignPost(String assignPost) {
+        this.assignPost = assignPost;
+    }
+
+    public Date getAssignAt() {
+        return assignAt;
+    }
+
+    public void setAssignAt(Date assignAt) {
+        this.assignAt = assignAt;
+    }
+
+    public String getBlockReason() {
+        return blockReason;
+    }
+
+    public void setBlockReason(String blockReason) {
+        this.blockReason = blockReason;
     }
 
     public Integer getStatus() {

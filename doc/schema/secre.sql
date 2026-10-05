@@ -94,9 +94,17 @@ CREATE TABLE IF NOT EXISTS t_secre_urge_item (
   id bigint NOT NULL COMMENT '主键',
   item_no varchar(64) DEFAULT NULL COMMENT '届期催收与巡查条目代号',
   due_at datetime DEFAULT NULL COMMENT '该交回那一日的止点时刻',
-  amount decimal(12,2) DEFAULT NULL COMMENT '最多许提前几日',
+  amount decimal(12,2) DEFAULT NULL COMMENT '最多许提前几日（只认本笔这一格）',
   content varchar(255) DEFAULT NULL COMMENT '事由与所对载体的记要',
-  status int DEFAULT NULL COMMENT '条目情形 0搁着 1已派出 2派不成',
+  org_no varchar(64) DEFAULT NULL COMMENT '所挂机关代号（同机关并段用）',
+  area_no varchar(64) DEFAULT NULL COMMENT '片号（门牌片区，同机关同片号并一段）',
+  post_no varchar(64) DEFAULT NULL COMMENT '承办岗代号（季度额度按岗计）',
+  contact varchar(128) DEFAULT NULL COMMENT '联系一栏（空着好几季没人补的天生走不动）',
+  carrier_no varchar(64) DEFAULT NULL COMMENT '所对载体件码（已从册面并走的天生走不动）',
+  assign_post varchar(64) DEFAULT NULL COMMENT '交办那一刻接手的那个岗',
+  assign_at datetime DEFAULT NULL COMMENT '交办那一刻',
+  block_reason varchar(255) DEFAULT NULL COMMENT '交办不走的缘故（堵在哪一环／哪一栏，日后照此捞出重排）',
+  status int DEFAULT NULL COMMENT '条目情形 0搁着(未启动) 1已派出(已交办) 2派不成(交办不走)',
   del_flag int DEFAULT '0' COMMENT '删除标记 0正常 1删除',
   create_by varchar(64) DEFAULT NULL COMMENT '创建者',
   create_time datetime DEFAULT NULL COMMENT '创建时间',
@@ -105,6 +113,36 @@ CREATE TABLE IF NOT EXISTS t_secre_urge_item (
   remark varchar(500) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='届期催收与巡查条目';
+
+-- 季度承办额度：哪个岗哪一季摊得上几件，满了的当轮标交办不走、缘故落回条目
+CREATE TABLE IF NOT EXISTS t_secre_post_quota (
+  id bigint NOT NULL COMMENT '主键',
+  post_no varchar(64) DEFAULT NULL COMMENT '承办岗代号',
+  quarter_no varchar(16) DEFAULT NULL COMMENT '季度号（如 2026Q4）',
+  quota_num int DEFAULT NULL COMMENT '本季额度（一件一占）',
+  used_num int DEFAULT NULL COMMENT '本季已占件数',
+  del_flag int DEFAULT '0' COMMENT '删除标记 0正常 1删除',
+  create_by varchar(64) DEFAULT NULL COMMENT '创建者',
+  create_time datetime DEFAULT NULL COMMENT '创建时间',
+  update_by varchar(64) DEFAULT NULL COMMENT '更新者',
+  update_time datetime DEFAULT NULL COMMENT '更新时间',
+  remark varchar(500) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='承办岗季度额度';
+
+-- 市里下文停办的日子：窗口照开，这些日子不数进提前量（法定节假日另行在代码内表中）
+CREATE TABLE IF NOT EXISTS t_secre_break_day (
+  id bigint NOT NULL COMMENT '主键',
+  break_date date NOT NULL COMMENT '停办那一日',
+  break_kind varchar(32) DEFAULT NULL COMMENT '来路（市里下文停办）',
+  del_flag int DEFAULT '0' COMMENT '删除标记 0正常 1删除',
+  create_by varchar(64) DEFAULT NULL COMMENT '创建者',
+  create_time datetime DEFAULT NULL COMMENT '创建时间',
+  update_by varchar(64) DEFAULT NULL COMMENT '更新者',
+  update_time datetime DEFAULT NULL COMMENT '更新时间',
+  remark varchar(500) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='停办日';
 
 CREATE TABLE IF NOT EXISTS t_secre_warn_line (
   id bigint NOT NULL COMMENT '主键',
